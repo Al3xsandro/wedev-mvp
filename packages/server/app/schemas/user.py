@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 from app.schemas.roles import RoleEnum
 
 from typing import Optional
@@ -10,30 +10,25 @@ from pydantic import BaseModel
 class UserSchema(BaseModel):
     firstName: str
     lastName: str
-    email: str
-    password: str
+    email: EmailStr
     role: RoleEnum
     state: str
     city: str
     address: str
     postalCode: str
-    created_at: Optional[date] = None
 
 
 class UserCreate(UserSchema):
-    pass
+    password: str
+
+
+class UserResponse(UserSchema):
+    id: Optional[int] = None
+    created_at: Optional[date] = None
+
+    class Config:
+        orm_mode = True
 
 
 class UserUpdate(UserSchema):
     password: Optional[str] = None
-
-
-class UserResponse(BaseModel):
-    firstName: str
-    lastName: str
-    email: str
-    role: RoleEnum
-    state: str
-    city: str
-    address: str
-    postalCode: str
