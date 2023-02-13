@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  postgres:
+    image: postgres
+    container_name: wedev-database
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=wedev
+    volumes:
+      - pgdata:/data/POSTGRES_DB
+  app:
+    container_name: wedev-app
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    restart: on-failure
+    environment:
+      - DATABASE_URL=postgresql://postgres:docker@postgres/wedev
+    depends_on:
+      postgres:
+        condition: service_started
+    links:
+      - postgres
+
+volumes:
+  pgdata:
+    driver: local
