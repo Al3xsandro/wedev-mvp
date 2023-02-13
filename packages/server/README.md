@@ -14,7 +14,7 @@ Desafio Wedev.software
     - Cursos
 
 ### Configurações do projeto:
-Para configurar o container refaça os seguintes passos em sua máquina (garanta que o [docker](https://docs.docker.com/engine/install/) esteja instalado e configurado corretamente em sua máquina)
+Para configurar o container refaça os seguintes passos antes de prosseguir(garanta que o [docker](https://docs.docker.com/engine/install/) esteja instalado e configurado corretamente em sua máquina)
 
 ### Iniciando
 ```bash
