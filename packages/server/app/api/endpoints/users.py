@@ -18,7 +18,7 @@ router = APIRouter()
     description="Essa rota deve retornar as informações do usuário junto com o tipo de conta dentro da plataforma",
     response_model=UserSchema,
 )
-def getUser(db: Session = Depends(get_db), user: User = Depends(getCurrentUser)):
+def get_user(db: Session = Depends(get_db), user: User = Depends(getCurrentUser)):
     return
 
 
@@ -29,7 +29,7 @@ def getUser(db: Session = Depends(get_db), user: User = Depends(getCurrentUser))
     status_code=201,
     response_model=TokenSchema,
 )
-def createUser(db: Session = Depends(get_db), user: UserSchema = Body()):
+def create_user(db: Session = Depends(get_db), user: UserSchema = Body()):
     return
 
 
@@ -40,7 +40,7 @@ def createUser(db: Session = Depends(get_db), user: UserSchema = Body()):
     status_code=200,
     response_model=UserResponse,
 )
-def updateUse(
+def update_user(
     db: Session = Depends(get_db),
     user_id: str = Query(),
     user: User = Depends(getCurrentUser),
@@ -55,7 +55,7 @@ def updateUse(
     status_code=200,
     response_model=None,
 )
-def deleteUser(
+def delete_user(
     db: Session = Depends(get_db), user_id: str = Query(), user: User = Depends(isStaff)
 ):
     return
