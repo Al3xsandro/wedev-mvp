@@ -17,3 +17,4 @@ class Course(Base):
     teacherId = Column(Integer, ForeignKey("users.id"))
     studentCourses = relationship("StudentCourse", back_populates="course")
     courseLikes = relationship("CourseLike", back_populates="course")
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
