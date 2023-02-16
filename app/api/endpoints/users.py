@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query, Body, Depends, HTTPException, Request
+from fastapi import APIRouter, Query, Body, Depends, HTTPException
 
 from app.database.database import get_db
 from sqlalchemy.orm import Session
@@ -12,21 +12,12 @@ import app.crud.user as crud
 from app.database.models import User
 from app.api.middlewares import getCurrentUser, isStaff
 
-templates = Jinja2Templates(directory="app/templates")
+
 router = APIRouter()
 
 
-@router.get("/", include_in_schema=False)
-def dashboard(
-    request: Request,
-    db: Session = Depends(get_db),
-    user: User = Depends(getCurrentUser),
-):
-    return templates.TemplateResponse("base.html", {"request": request})
-
-
 @router.get(
-    "/users/me",
+    "/me",
     name="Dados do usuário",
     description="Essa rota deve retornar as informações do usuário junto com o tipo de conta dentro da plataforma",
     response_model=UserResponse,
@@ -36,7 +27,7 @@ def get_user(db: Session = Depends(get_db), user: User = Depends(getCurrentUser)
 
 
 @router.post(
-    "/users",
+    "/",
     name="Criar usuário",
     description="Essa rota permite que staffs criem novas contas do tipo aluno e professor na plataforma",
     status_code=201,
@@ -60,7 +51,7 @@ def create_user(
 
 
 @router.put(
-    "/users",
+    "/",
     name="Atualizar usuário",
     description="Essa rota permite atualizar as inforamções do usuário",
     status_code=200,
@@ -84,7 +75,7 @@ def update_user(
 
 
 @router.delete(
-    "/users/{user_id}",
+    "/{user_id}",
     name="Deletar usuário",
     description="Essa rota permite que staffs deletem contas do tipo aluno e professor na plataforma",
     status_code=200,
