@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<head>
-	<link rel="icon" href="{{url_for('static', path='images/favicon.ico')}}">
-	{% block title %}
-	{% endblock %}
-</head>
-<body>
-	{% block content %}
-	{% endblock %}
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block title %} {% endblock %}
+  </head>
 
-	{% block script %}
-	{% endblock %}
-</body>
+  <body>
+    {% block content %} {% endblock %} {% block script %} {% endblock %}
+  </body>
 </html>

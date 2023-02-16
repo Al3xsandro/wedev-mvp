@@ -13,7 +13,7 @@ router = APIRouter()
 
 
 @router.get(
-    "/:id",
+    "/courses/:id",
     name="Acessar curso",
     description="Acessar curso cadastrado",
     response_model=CourseResponse,
@@ -25,7 +25,7 @@ def get_course(
 
 
 @router.post(
-    "/",
+    "/courses",
     name="Criar curso",
     description="Essa rota permite que você crie um curso na plataforma",
     response_model=CourseResponse,

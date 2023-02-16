@@ -1,8 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.security import OAuth2PasswordRequestForm
 
 from app.database.database import get_db
 from sqlalchemy.orm import Session
+
+from fastapi.templating import Jinja2Templates
 
 import app.crud.user as crud
 from app.schemas.token import TokenSchema
@@ -13,7 +15,13 @@ from app.core.settings import ACCESS_TOKEN_EXPIRE_MINUTES
 
 from datetime import timedelta
 
+templates = Jinja2Templates(directory="app/templates")
 router = APIRouter()
+
+
+@router.get("/login", include_in_schema=False)
+def login(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
 
 
 @router.post(
@@ -23,9 +31,11 @@ router = APIRouter()
     response_model=TokenSchema,
 )
 def auth(
+    request: Request,
     db: Session = Depends(get_db),
     form_data: OAuth2PasswordRequestForm = Depends(),
 ):
+    errors = []
     user: UserSchema = crud.authenticate(
         db, email=form_data.username, password=form_data.password
     )
@@ -33,11 +43,18 @@ def auth(
     if not user:
         raise HTTPException(status_code=400, detail="Email ou senha incorretos")
 
-    return {
-        "access_token": createAccessToken(
-            data=dict({"role": user.role}),
-            subject=user.id,
-            expires_delta=timedelta(ACCESS_TOKEN_EXPIRE_MINUTES),
-        ),
-        "token_type": "bearer",
-    }
+    response = templates.TemplateResponse(
+        "login.html", {"request": request, "erros": errors}
+    )
+
+    access_token = createAccessToken(
+        data=dict({"role": user.role}),
+        subject=user.id,
+        expires_delta=timedelta(ACCESS_TOKEN_EXPIRE_MINUTES),
+    )
+
+    response.set_cookie(
+        key="access_token", value=f"Bearer {access_token}", httponly=True
+    )
+
+    return response

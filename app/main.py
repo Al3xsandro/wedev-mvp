@@ -6,7 +6,6 @@ from app.api.router import routes
 from app.database.database import engine, Base
 
 from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 
 Base.metadata.create_all(bind=engine)
 
@@ -27,4 +26,4 @@ app.add_middleware(
 
 # Routes
 app.include_router(routes)
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
