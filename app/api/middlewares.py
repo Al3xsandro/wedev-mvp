@@ -1,3 +1,5 @@
+from typing import Generator
+
 from fastapi import Depends, HTTPException, status
 
 from app.database.database import get_db
@@ -13,7 +15,17 @@ from pydantic import ValidationError
 
 from jose import jwt
 
+from app.database.database import SessionLocal
+
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth")
+
+
+def get_db() -> Generator:
+    try:
+        db = SessionLocal()
+        yield db
+    finally:
+        db.close()
 
 
 def getCurrentUser(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
@@ -37,7 +49,7 @@ def getCurrentUser(db: Session = Depends(get_db), token: str = Depends(oauth2_sc
 def isStaff(
     currentUser: User = Depends(getCurrentUser),
 ):
-    if not crud.isStaff("admin"):
+    if not crud.isStaff(currentUser.role):
         raise HTTPException(
             status_code=401, detail="Você não tem permissão para executar esta ação"
         )

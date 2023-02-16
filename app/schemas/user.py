@@ -30,5 +30,10 @@ class UserResponse(UserSchema):
         orm_mode = True
 
 
-class UserUpdate(UserSchema):
-    password: Optional[str] = None
+class UserUpdate(BaseModel):
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    state: Optional[str] = None
+    city: Optional[str] = None
+    address: Optional[str] = None
+    postalCode: Optional[str] = None

@@ -35,8 +35,9 @@ def auth(
 
     return {
         "access_token": createAccessToken(
-            data={"role": user.role},
-            subject=id,
+            data=dict({"role": user.role}),
+            subject=user.id,
             expires_delta=timedelta(ACCESS_TOKEN_EXPIRE_MINUTES),
-        )
+        ),
+        "token_type": "bearer",
     }

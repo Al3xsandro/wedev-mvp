@@ -6,6 +6,7 @@ import app.crud.course as crud
 
 from app.database.models import User
 from app.schemas.course import CourseCreate, CourseResponse
+
 from app.api.middlewares import getCurrentUser, isStaff
 
 router = APIRouter()
@@ -17,7 +18,9 @@ router = APIRouter()
     description="Acessar curso cadastrado",
     response_model=CourseResponse,
 )
-def get_course(id: int, db: Session = Depends(get_db), user: User = Depends(isStaff)):
+def get_course(
+    id: int, db: Session = Depends(get_db), user: User = Depends(getCurrentUser)
+):
     return {"id": 1}
 
 
@@ -34,3 +37,10 @@ def create_course(
 ):
     course = crud.create(db, course_obj=course_obj)
     return course
+
+
+# get all course students by id
+
+# delete course
+
+# get all courses and add pagination
