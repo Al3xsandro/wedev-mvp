@@ -21,6 +21,7 @@ router = APIRouter()
     name="Dados do usuário",
     description="Essa rota deve retornar as informações do usuário junto com o tipo de conta dentro da plataforma",
     response_model=UserResponse,
+    tags=["Usuários"],
 )
 def get_user(db: Session = Depends(get_db), user: User = Depends(getCurrentUser)):
     return user
@@ -32,6 +33,7 @@ def get_user(db: Session = Depends(get_db), user: User = Depends(getCurrentUser)
     description="Essa rota permite que staffs criem novas contas do tipo aluno e professor na plataforma",
     status_code=201,
     response_model=UserResponse,
+    tags=["staff"],
 )
 def create_user(
     db: Session = Depends(get_db),
@@ -56,6 +58,7 @@ def create_user(
     description="Essa rota permite atualizar as inforamções do usuário",
     status_code=200,
     response_model=UserUpdate,
+    tags=["Usuários"],
 )
 def update_user(
     db: Session = Depends(get_db),
@@ -80,6 +83,7 @@ def update_user(
     description="Essa rota permite que staffs deletem contas do tipo aluno e professor na plataforma",
     status_code=200,
     response_model=None,
+    tags=["Staff"],
 )
 def delete_user(
     db: Session = Depends(get_db), user_id: int = Query(), user: User = Depends(isStaff)

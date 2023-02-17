@@ -13,10 +13,37 @@ router = APIRouter()
 
 
 @router.get(
+    "/all",
+    name="Listar todos os cursos da plataforma",
+    description="Listar todos os cursos cadastrados na plataforma",
+    response_model=CourseResponse,
+    tags=["Staff"],
+)
+def get_courses(
+    db: Session = Depends(get_db),
+    user: User = Depends(isStaff),
+):
+    courses = crud.getCourses(db)
+    return courses
+
+
+@router.get(
+    "/all/me",
+    name="Listar meus cursos",
+    description="Listar todos os cursos relacionados ao seu user-id",
+    response_model=CourseResponse,
+    tags=["Cursos"],
+)
+def get_my_courses():
+    return
+
+
+@router.get(
     "/:id",
     name="Acessar curso",
     description="Acessar curso cadastrado",
     response_model=CourseResponse,
+    tags=["Cursos"],
 )
 def get_course(
     id: int, db: Session = Depends(get_db), user: User = Depends(getCurrentUser)
@@ -29,6 +56,7 @@ def get_course(
     name="Criar curso",
     description="Essa rota permite que você crie um curso na plataforma",
     response_model=CourseResponse,
+    tags=["Cursos"],
 )
 def create_course(
     db: Session = Depends(get_db),
@@ -38,8 +66,6 @@ def create_course(
     course = crud.create(db, course_obj=course_obj)
     return course
 
-
-# get all course students by id
 
 # delete course
 
