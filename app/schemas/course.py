@@ -1,7 +1,9 @@
 from pydantic import BaseModel
 
-from typing import Optional
+from typing import Optional, List
 from datetime import date
+
+from app.schemas.user import UserSchema
 
 
 class CourseSchema(BaseModel):
@@ -19,6 +21,7 @@ class CourseCreate(CourseSchema):
 class CourseResponse(CourseSchema):
     id: Optional[int] = None
     created_at: Optional[date] = None
+    students: List[UserSchema]
 
     class Config:
         orm_mode = True
