@@ -33,10 +33,13 @@ def auth(
     if not user:
         raise HTTPException(status_code=400, detail="Email ou senha incorretos")
 
+    token = createAccessToken(
+        data={"role": user.role},
+        subject=user.id,
+        expires_delta=timedelta(ACCESS_TOKEN_EXPIRE_MINUTES),
+    )
+
     return {
-        "access_token": createAccessToken(
-            data={"role": user.role},
-            subject=id,
-            expires_delta=timedelta(ACCESS_TOKEN_EXPIRE_MINUTES),
-        )
+        "access_token": token,
+        "token_type": "bearer",
     }
