@@ -6,7 +6,7 @@ from datetime import date
 
 from pydantic import BaseModel
 
-from app.schemas.phoneNumber import PhoneNumber
+from app.schemas.phoneNumber import PhoneNumberResponse
 
 
 class UserSchema(BaseModel):
@@ -17,6 +17,7 @@ class UserSchema(BaseModel):
     state: str
     city: str
     address: str
+    phoneNumbers: List[PhoneNumberResponse]
     postalCode: str
 
 
@@ -26,7 +27,6 @@ class UserCreate(UserSchema):
 
 class UserResponse(UserSchema):
     id: Optional[int] = None
-    phoneNumbers: List[PhoneNumber]
     created_at: Optional[date] = None
 
     class Config:
@@ -40,3 +40,4 @@ class UserUpdate(BaseModel):
     city: Optional[str] = None
     address: Optional[str] = None
     postalCode: Optional[str] = None
+    phoneNumbers: List[PhoneNumberResponse] = []

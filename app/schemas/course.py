@@ -21,7 +21,7 @@ class CourseCreate(CourseSchema):
 class CourseResponse(CourseSchema):
     id: Optional[int] = None
     created_at: Optional[date] = None
-    students: List[UserSchema]
+    students: List[UserSchema] = []
 
     class Config:
         orm_mode = True
