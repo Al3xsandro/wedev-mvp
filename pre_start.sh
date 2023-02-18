@@ -1,8 +1,8 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
+export PYTHONPATH=$PYTHONPATH:/app
 
-echo "Run seed.."
+# run migrations
+alembic upgrade head
 
 # run initial data
 python3 app/initial_data.py
-
-echo "Finished"
