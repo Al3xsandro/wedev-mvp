@@ -17,6 +17,8 @@ Desafio Wedev.software
 Para configurar o container refaça os seguintes passos antes de prosseguir (garanta que o [docker](https://docs.docker.com/engine/install/) esteja instalado e configurado corretamente em sua máquina)
 
 ### Iniciando
+Abra o terminal na raiz do projeto e execute o seguinte comando:
+
 ```bash
     docker-compose up
 ```
@@ -24,9 +26,16 @@ Para configurar o container refaça os seguintes passos antes de prosseguir (gar
 Após isso container será executado em sua máquina
 - Para acessar abra o seu navegador e digite a seguinte url: `http://localhost:8000`
 
-O container será executado com `FastAPI` e `PostgreSQL`
+O container será executado com `FastAPI` e `PostgreSQL`, porém sem as migrações do banco de dados!
 
-Caso não deseje o modo verboso feche o terminal e abra com o seguinte comando:
+Para continuar o processo de instalação deixe o postgres rodando em um outro terminal e execute o bashscript presente na raiz do projeto:
+
+```bash
+    $ chmod +x ./pre_start.sh
+    $ ./pre_start.sh
+```
+
+Aguarde as migrações e os seeds executarem e por fim inicie o projeto novamente (não esqueça de matar o processo do docker compose aberto no outro terminal:
 
 ```bash
     # para ligar
