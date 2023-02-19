@@ -3,10 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.router import routes
 
-from app.database.database import engine, Base
-
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI(
     title="Wedev Software",
     description="API responsável por gerenciar a escola de programação proposta pelo desafio",
