@@ -17,7 +17,7 @@ from jose import jwt
 
 from app.database.database import SessionLocal
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/session/auth")
 
 
 def get_db() -> Generator:

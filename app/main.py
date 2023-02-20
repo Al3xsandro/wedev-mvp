@@ -3,12 +3,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.router import routes
 
-from app.database.database import engine, Base
-
-from fastapi.staticfiles import StaticFiles
-
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI(
     title="Wedev Software",
     description="API responsável por gerenciar a escola de programação proposta pelo desafio",
@@ -26,4 +20,3 @@ app.add_middleware(
 
 # Routes
 app.include_router(routes)
-app.mount("/static", StaticFiles(directory="app/static"), name="static")

@@ -1,8 +1,10 @@
-import asyncio
 import logging
 
 from app.database.seed import init_db
 from app.database.database import SessionLocal
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 def init():
@@ -17,4 +19,4 @@ def main():
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

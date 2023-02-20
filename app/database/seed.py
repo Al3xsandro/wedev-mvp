@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from app.core.security import getPasswordHash
 
 import app.crud.user as crud
-from app.schemas.user import UserCreate
+from app.database.models import User, PhoneNumber
 from app.core.settings import DEFAULT_USER, DEFAULT_PASSWORD
 
 
@@ -10,7 +10,7 @@ def init_db(db: Session):
     user = crud.getUserByEmail(db, DEFAULT_USER)
 
     if not user:
-        user_obj = UserCreate(
+        user_obj = User(
             firstName="John",
             lastName="Leao",
             email=DEFAULT_USER,
@@ -22,4 +22,10 @@ def init_db(db: Session):
             postalCode="00000-000",
         )
 
-        crud.UserCreate(db, user_obj)
+        phones = PhoneNumber(user=user_obj, phoneNumber="5554-1535")
+
+        user_obj.phoneNumbers = [phones]
+
+        db.add(user_obj)
+        db.commit()
+        db.refresh(user_obj)

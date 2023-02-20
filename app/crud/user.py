@@ -1,8 +1,13 @@
 from sqlalchemy.orm import Session
-from app.database.models import User
+from app.database.models import User, PhoneNumber
 from app.schemas.user import UserSchema, UserCreate
 
 from app.core.security import getPasswordHash, verifyPassword
+
+
+def getAll(db: Session, skip: int = 0, limit: int = 100):
+    users = db.query(User).offset(skip).limit(limit).all()
+    return users
 
 
 def create(db: Session, user_obj: UserCreate):
@@ -18,6 +23,14 @@ def create(db: Session, user_obj: UserCreate):
         postalCode=user_obj.postalCode,
     )
 
+    phones = []
+
+    for number in user_obj.phoneNumbers:
+        phone = PhoneNumber(user=db_user, phoneNumber=number)
+        phones.append(phone)
+
+    db_user.phoneNumbers = phones
+
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
@@ -29,8 +42,8 @@ def getUserById(db: Session, id: int):
     return db.query(User).filter(User.id == id).first()
 
 
-def update(db: Session, user_id: int, user_obj: User):
-    user = db.query(User).filter(User.id == user_id).update(user_obj)
+def update(db: Session, user: User, user_obj: User):
+    user = db.query(User).filter(User.id == user.id).update(user_obj)
     db.commit()
     return user
 
@@ -50,11 +63,10 @@ def authenticate(db: Session, email: str, password: str):
     return user
 
 
-def deleteUser(db: Session, id: int):
-    db.query(User).filter(User.id == id).delete(synchronize_session="auto")
-    db.commit()
-    return
-
-
 def isStaff(role: str):
     return role == "STAFF"
+
+
+def getAllUsers(db: Session, skip: int = 0, limit: int = 100):
+    users = db.query(User).join(PhoneNumber.user).offset(skip).limit(limit).all()
+    return users
