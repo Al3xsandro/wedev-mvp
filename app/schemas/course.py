@@ -11,7 +11,7 @@ class CourseSchema(BaseModel):
     is_active: Optional[bool] = True
     start_date: Optional[date] = None
     end_date: Optional[date] = None
-    teacherId: str
+    teacherId: int
 
 
 class CourseCreate(CourseSchema):
@@ -21,7 +21,15 @@ class CourseCreate(CourseSchema):
 class CourseResponse(CourseSchema):
     id: Optional[int] = None
     created_at: Optional[date] = None
-    students: List[UserSchema] = []
+
+    class Config:
+        orm_mode = True
+
+
+class CourseResponseTeacher(CourseSchema):
+    id: Optional[int] = None
+    students: List[UserSchema]
+    created_at: Optional[date] = None
 
     class Config:
         orm_mode = True

@@ -9,6 +9,11 @@ class PhoneNumber(BaseModel):
     phoneNumber: str
 
 
+class UpdatePhoneNumber(BaseModel):
+    id: Optional[int] = None
+    phoneNumber: str
+
+
 class PhoneNumberResponse(BaseModel):
     id: Optional[int] = None
     phoneNumber: str
