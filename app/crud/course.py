@@ -57,6 +57,11 @@ def getCourseById(db: Session, course_id: int):
     course = db.query(Course).filter(Course.id == course_id).first()
 
     # todo: add this reposibility to database
+    # query = (
+    #   db.query(Course, func.count(User.id).label("totalStudents"))
+    #     .outerjoin(Course.students)
+    #     .group_by(Course.id)
+    # )
 
     return {
         "course": course,
