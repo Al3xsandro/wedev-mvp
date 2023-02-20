@@ -1,11 +1,17 @@
-from fastapi import APIRouter, Body, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, Query, HTTPException
+from typing import Optional, List
 
 from app.database.database import get_db
 from sqlalchemy.orm import Session
 import app.crud.course as crud
 
 from app.database.models import User
-from app.schemas.course import CourseCreate, CourseResponse
+from app.schemas.course import (
+    CourseCreate,
+    CourseResponse,
+    CourseResponseTeacher,
+    CourseResponseCount,
+)
 
 from app.api.middlewares import getCurrentUser, isStaff
 
@@ -16,39 +22,79 @@ router = APIRouter()
     "/all",
     name="Listar todos os cursos da plataforma",
     description="Listar todos os cursos cadastrados na plataforma",
-    response_model=CourseResponse,
     tags=["Staff"],
+    response_model=List[CourseResponseTeacher],
 )
 def get_courses(
     db: Session = Depends(get_db),
+    isActive: Optional[bool] = Query(default=True, alias="IsActive"),
+    name: Optional[str] = Query(default=None, alias="Name"),
+    skip: Optional[int] = Query(default=None, alias="Skip"),
+    limit: Optional[int] = Query(default=None, alias="Limit"),
     user: User = Depends(isStaff),
 ):
-    courses = crud.getCourses(db)
+    courses = crud.getCourses(db, isActive, name, skip, limit)
     return courses
 
 
 @router.get(
-    "/all/me",
-    name="Listar meus cursos",
+    "/teacher/all",
+    name="Listar cursos do professor",
     description="Listar todos os cursos relacionados ao seu user-id",
-    response_model=CourseResponse,
-    tags=["Cursos"],
+    tags=["Professor"],
+    response_model=List[CourseResponseTeacher],
 )
-def get_my_courses():
-    return
+def get_teacher_courses(
+    db: Session = Depends(get_db),
+    isActive: Optional[bool] = Query(default=True, alias="IsActive"),
+    name: Optional[str] = Query(default=None, alias="Name"),
+    skip: Optional[int] = Query(default=None, alias="Skip"),
+    limit: Optional[int] = Query(default=None, alias="Limit"),
+    user: User = Depends(getCurrentUser),
+):
+    if user.role != "TEACHER":
+        raise HTTPException(status_code=400, detail="Você não é um professor")
+
+    courses = crud.getCoursesByTeacher(db, user.id, isActive, name, skip, limit)
+    return courses
 
 
 @router.get(
-    "/:id",
+    "/student/all",
+    name="Listar cursos do aluno",
+    description="Listar todos os cursos relacionados ao seu user-id",
+    response_model=List[CourseResponse],
+    tags=["Aluno"],
+)
+def get_student_courses(
+    db: Session = Depends(get_db), user: User = Depends(getCurrentUser)
+):
+    if user.role != "STUDENT":
+        raise HTTPException(status_code=400, detail="Você não é um aluno")
+
+    return user.studentCourses
+
+
+@router.get(
+    "/{course_id}",
     name="Acessar curso",
     description="Acessar curso cadastrado",
-    response_model=CourseResponse,
-    tags=["Cursos"],
+    tags=["Staff"],
+    response_model=CourseResponseCount,
 )
 def get_course(
-    id: int, db: Session = Depends(get_db), user: User = Depends(getCurrentUser)
+    course_id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(isStaff),
 ):
-    return {"id": 1}
+    course = crud.getCourseById(db, course_id)
+
+    if not course:
+        raise HTTPException(
+            status_code=400, detail="Não há cursos cadastrados com esse id"
+        )
+
+    return course
 
 
 @router.post(
@@ -56,7 +102,8 @@ def get_course(
     name="Criar curso",
     description="Essa rota permite que você crie um curso na plataforma",
     response_model=CourseResponse,
-    tags=["Cursos"],
+    status_code=201,
+    tags=["Staff"],
 )
 def create_course(
     db: Session = Depends(get_db),
@@ -67,6 +114,31 @@ def create_course(
     return course
 
 
-# delete course
+@router.post(
+    "/student",
+    name="Adicionar estudante a um curso",
+    description="Essa rota permite que você adicione um aluno em um curso",
+    tags=["Staff"],
+)
+def add_student(
+    db: Session = Depends(get_db),
+    student_id: int = Body(),
+    course_id: int = Body(),
+    user: User = Depends(isStaff),
+):
+    user = crud.addStudentToCourse(db=db, student_id=student_id, course_id=course_id)
+    return user
 
-# get all courses and add pagination
+
+@router.post(
+    "/{course_id}/like/",
+    name="Avaliar curso",
+    description="Essa rota permite que você avalie um curso que esteja matriculado",
+    tags=["Usuários"],
+)
+def like_course(
+    db: Session = Depends(get_db),
+    course_id: int = Query(),
+    user: User = Depends(getCurrentUser),
+):
+    return crud.likeCourse(db, userId=user.id, courseId=course_id)
