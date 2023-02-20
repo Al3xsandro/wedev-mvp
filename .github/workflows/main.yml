@@ -52,11 +52,11 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: run migrations
       env: 
-        DATABASE_URL: ${{secrets.NODE_ENV}}
+        DATABASE_URL: ${{secrets.DATABASE_URL}}
       run: | 
           alembic upgrade head
     - name: Test with pytest
       env: 
-        DATABASE_URL: ${{secrets.NODE_ENV}}
+        DATABASE_URL: ${{secrets.DATABASE_URL}}
       run: |
         pytest
