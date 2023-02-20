@@ -33,3 +33,9 @@ class CourseResponseTeacher(CourseSchema):
 
     class Config:
         orm_mode = True
+
+
+class CourseResponseCount(BaseModel):
+    course: CourseResponseTeacher
+    totalStudents: int
+    totalLikes: int
