@@ -104,7 +104,5 @@ def likeCourse(db: Session, userId: int, courseId: int):
         )
 
     course.courseLikes.append(user)
-
     db.commit()
-
     return "Avalição adicionada com sucesso!"

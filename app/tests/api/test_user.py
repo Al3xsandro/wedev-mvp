@@ -17,7 +17,7 @@ def test_auth_with_incorrect_credentials():
     assert response.status_code == 400
 
 
-def test_auth_with_staff_credentials():
+def test_auth_with_staff_credentials(create_staff):
     body = {
         "username": DEFAULT_USER,
         "password": DEFAULT_PASSWORD,
