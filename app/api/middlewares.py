@@ -35,7 +35,7 @@ def getCurrentUser(db: Session = Depends(get_db), token: str = Depends(oauth2_sc
     except (jwt.JWTError, ValidationError):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Suas credenciais são inválidas",
+            detail="Suas credenciais estão inválidas",
         )
 
     user = crud.getUserById(db, token_data.sub)
