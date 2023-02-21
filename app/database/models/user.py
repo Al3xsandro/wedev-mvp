@@ -2,7 +2,7 @@ from sqlalchemy import Column, Enum, Integer, String, DateTime
 from sqlalchemy.orm import relationship
 import datetime
 
-from app.schemas.roles import RoleEnum
+from app.schemas.role import RoleEnum
 
 from app.database.database import Base
 

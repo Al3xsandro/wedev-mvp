@@ -1,6 +1,6 @@
 import re
 from pydantic import BaseModel, EmailStr, validator
-from app.schemas.roles import RoleEnum
+from app.schemas.role import RoleEnum
 
 from typing import Optional, List
 from datetime import date

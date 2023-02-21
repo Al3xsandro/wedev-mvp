@@ -8,5 +8,5 @@ class RoleEnum(str, Enum):
     staff = "STAFF"
 
 
-class Roles(BaseModel):
-    roles: RoleEnum
+class Role(BaseModel):
+    role: RoleEnum
